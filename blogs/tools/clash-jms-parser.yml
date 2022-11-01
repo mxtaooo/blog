@@ -1,0 +1,126 @@
+parsers:
+  - url: https://example.com/get-sub
+    code: |
+      module.exports.parse = async (raw, { axios, yaml, notify, console }, { name, url, interval, selected }) => {
+        /** parse shadowsocks standard share uri */
+        function parseSS(uri) {
+            // shadowsocks URI parttern: ss://{server config, base64 encoded}#{server name} ;
+            // shadowsocks server config pattern: {cipher}:{password}@{server ip/domain}:${port} ,
+            // but password section maybe contains any character
+            const SS_URI_PATTERN = /^ss:\/\/(\w+)(#(.+))?$/;
+            const SS_SERVER_PATTERN = /([\w-]+):(.+)@([\w\.]+):(\d+)/;
+            let matched = uri.match(SS_URI_PATTERN);
+            if (matched == null) {
+                return null;
+            }
+            // ciper:password@server:port
+            let config = atob(matched[1]).match(SS_SERVER_PATTERN);
+            if (config == null) {
+                return null;
+            }
+            let ciper = config[1];
+            let password = config[2];
+            let server = config[3];
+            let port = config[4];
+            // get or create config name
+            let name = matched.length == 4 ? matched[3] : (server + ":" + port);
+            return {
+                name: name,
+                type: "ss",
+                server: server,
+                port: parseInt(port),
+                cipher: ciper,
+                password: password
+                // udp: true
+            }
+        }
+        /** parse shadowsocks non-standard share uri (just my socks version) */
+        function parseVMess(uri) {
+            // VMess URI pattern: vmess://{server config, base64 encoded}
+            const VMESS_URI_PATTERN = /^vmess:\/\/(\w+)$/;
+            let matched = uri.match(VMESS_URI_PATTERN);
+            if (matched == null) {
+                return null;
+            }
+            // server config is a json string, example as follows:
+            // {
+            //      ps: config name,
+            //      add: server ip/domain,
+            //      port: server port,
+            //      id: user id,
+            //      aid: alter id,
+            //      net: network protocol (tcp/grpc/...),
+            //      type: maybe tcp obfs type?,
+            //      tls: enabled tls?
+            // }
+            let config = JSON.parse(atob(matched[1]));
+            return {
+                name: config.ps,
+                type: "vmess",
+                server: config.add,
+                port: parseInt(config.port),
+                uuid: config.id,
+                alterId: config.aid,
+                cipher: "auto",
+                //udp: false,
+                tls: false
+                //"skip-cert-verify": false,
+                //servername: servername
+            }
+        }
+        /** parse server config link */
+        function parseServer(uri) {
+            if (uri.startsWith("ss://")) {
+                return parseSS(uri);
+            }
+            if (uri.startsWith("vmess://")) {
+                return parseVMess(uri);
+            }
+            return null;
+        }
+        /** parse remaining info from just my socks API response body*/
+        async function fetchRemainInfo() {
+            /** calculate expired date (in unixtime format) */
+            function calcExpDate(dayOfMonth) {
+                let today = new Date();
+                if (today.getDate() > dayOfMonth) {
+                    if (today.getMonth() == 11) {
+                        return new Date(today.getFullYear() + 1, 0, dayOfMonth).getTime() / 1000;
+                    } else {
+                        return new Date(today.getFullYear(), today.getMonth() + 1, dayOfMonth).getTime() / 1000;
+                    }
+                } else {
+                    return new Date(today.getFullYear(), today.getMonth(), dayOfMonth).getTime() / 1000;
+                }
+            }
+            const JMS_REMAINING_API = "https://justmysocks5.net/members/getbwcounter.php";
+            try {
+                // `url` is raw subscribe url, take query string and generate remaining query url
+                let response = await axios.get(JMS_REMAINING_API + url.substring(url.indexOf("?")));
+                // {"monthly_bw_limit_b":100000000000,"bw_counter_b":22753528556,"bw_reset_day_of_month":18}
+                let data = response.data;
+                return "# upload=0; " 
+                    + "download=" + data.bw_counter_b + "; " 
+                    + "total=" + data.monthly_bw_limit_b + "; "
+                    + "expire=" + calcExpDate(data.bw_reset_day_of_month) + ";\n"
+            } catch (e) {
+                // notify: send a system notification, function signature is: `function notify(title:string, message:string, silent:bool)`
+                notify("fetch remaining error.", "cannot fetch remaining info of just my socks", true);
+                return "\n";
+            }
+        }
+
+        // `raw` is raw body from response, base64 encoded text, ervery line is a server config
+        let servers = atob(raw).split('\n').map(parseServer).filter(server => server != null);
+        let remaining = await fetchRemainInfo();
+        let config = {
+            proxies: servers,
+            "proxy-groups": [{
+                name: "jms-proxy",
+                type: "select",
+                proxies: servers.map(server => server.name)
+            }],
+            rules: ["MATCH,jms-proxy"]
+        }
+        return remaining + yaml.stringify(config);
+      }
