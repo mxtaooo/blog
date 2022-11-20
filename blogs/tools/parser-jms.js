@@ -145,7 +145,6 @@ module.exports.parse = async (raw, { axios, yaml, notify, console }, { name, url
     } catch (e) {
         // notify：send a system notification, function signature is: `function notify(title:string, message:string, silent:bool)`
         notify("fetch remaining error.", "cannot fetch remaining info of just my socks", true);
-        return "";
     }
     let config = {
         proxies: servers,
