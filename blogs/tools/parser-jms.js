@@ -36,6 +36,7 @@ const JMS_REMAINING_API = "https://justmysocks5.net/members/getbwcounter.php?ser
     if (today.getDate() >= day) {
         if (month == 11) {
             year += 1;
+            month = 0;
         } else {
             month += 1;
         }
