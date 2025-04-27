@@ -54,5 +54,6 @@ jobs:
           echo ">>>release current version..." && \
             mkdir -p /home/apps/blog/ && \
             tar -C /home/apps/blog/ -xzvf /tmp/github-actions/release.tgz && \
+            chown -R ${{ secrets.VPS_USER }}:${{ secrets.VPS_USER }} /home/apps/blog && \
             echo ">>>delete artifact..." && \
             rm -fv /tmp/github-actions/release.tgz
