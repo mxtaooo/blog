@@ -1,0 +1,9 @@
+# hugo build
+/public/
+/resources/
+/.hugo_build.lock
+## 本地构建时会创建/assets/jsconfig.json，此处将之排除掉以避免污染代码库
+## 也可以在hugo.yaml中新增如下配置，避免创建该文件
+## build:
+##   noJSConfigInAssets: true
+/assets/jsconfig.json
