@@ -1,5 +1,5 @@
 ---
-title: 范畴论 - Part 1
+title: 范畴论笔记 - Part 1
 description: CTFP博客系列及视频笔记，第一部分
 author: mxtao
 date: 2020-04-07

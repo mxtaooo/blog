@@ -1,4 +1,6 @@
 ---
+title: 范畴论笔记 - Part 2
+description: CTFP博客系列及视频笔记，第二部分
 author: mxtao
 date: 2020-04-07
 draft: true
