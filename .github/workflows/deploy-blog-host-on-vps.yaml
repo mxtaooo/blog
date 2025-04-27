@@ -1,0 +1,58 @@
+name: deploy blog, host on vps
+
+on:
+  push:
+    branches: [ "deploy" ]
+
+jobs:
+  host-on-vps:
+    runs-on: ubuntu-latest
+    steps:
+    - name: setup hugo
+      uses: peaceiris/actions-hugo@v3
+      with:
+        hugo-version: latest
+        extended: true
+    - name: checkout source code
+      uses: actions/checkout@v4
+      with:
+        ref: deploy
+        submodules: true
+        fetch-depth: 0
+    - name: build website
+      run: hugo -b $VPS_BASEURL -DEF
+    - name: create artifact
+      run: tar -C public/ -czf release.tgz .
+    - name: transfer artifact via scp
+      uses: appleboy/scp-action@v1.0.0
+      with:
+        host: ${{ secrets.VPS_HOST }}
+        username: ${{ secrets.VPS_USER }}
+        port: ${{ secrets.VPS_PORT }}
+        key: ${{ secrets.VPS_KEY }}
+        rm: true
+        source: ./release.tgz
+        target: /tmp/github-actions/
+    - name: deploy blog via ssh
+      uses: appleboy/ssh-action@v1.2.1
+      with:
+        host: ${{ secrets.VPS_HOST }}
+        username: ${{ secrets.VPS_USER }}
+        port: ${{ secrets.VPS_PORT }}
+        key: ${{ secrets.VPS_KEY }}
+        script: |
+          [ -d /home/apps/blog ] && \
+            ( echo ">>>backup running version..." && \
+            cd /home/apps/ && tar -czvf blog-bak-$(date '+%Y%m%d%H%M%S').tgz blog && \
+            rm -rf blog/* )
+
+          [ $(ls -t /home/apps/ | grep 'blog-bak-' | wc -l) -gt 5 ] && \
+            ( echo ">>>delete oldest backup(s)..." && \
+            cd /home/apps/ && \
+            rm -fv $(ls -t | grep 'blog-bak-' | tail +6) )
+
+          echo ">>>release current version..." && \
+            mkdir -p /home/apps/blog/ && \
+            tar -C /home/apps/blog/ -xzvf /tmp/github-actions/release.tgz && \
+            echo ">>>delete artifact..." && \
+            rm -fv /tmp/github-actions/release.tgz
