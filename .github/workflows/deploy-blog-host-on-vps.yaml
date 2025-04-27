@@ -20,7 +20,7 @@ jobs:
         submodules: true
         fetch-depth: 0
     - name: build website
-      run: hugo -DEF -b $VPS_BASEURL
+      run: hugo -b ${{ vars.VPS_BASEURL }} -DEF
     - name: create artifact
       run: tar -C public/ -czf release.tgz .
     - name: transfer artifact via scp
