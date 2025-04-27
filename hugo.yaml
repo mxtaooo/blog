@@ -1,0 +1,190 @@
+## 用命令行参数配置baseUrl
+baseurl: https://example.com/
+theme: hugo-theme-stack
+title: boboboker~
+copyright: all rights reserved.
+
+languageCode: zh-cn
+DefaultContentLanguage: zh-cn
+hasCJKLanguage: true
+languages:
+  zh-cn:
+    languageName: 简体中文
+    timeZone: Asia/Shanghai
+
+pagination:
+  pagerSize: 10
+
+params:
+  mainSections:
+    - posts
+  featuredImageField: image
+  rssFullContent: true
+  favicon: /favicon.ico
+  footer:
+    since: 2025
+    customText: >
+      网站&nbsp;<a href="https://github.com/mxtaooo/blog-hugo" target="_blank"><b>源代码</b></a>&nbsp;
+      存储于&nbsp;<a href="https://github.com" target="_blank">GitHub</a>
+  dateFormat:
+    published: 2006-01-02
+    lastUpdated: 2006-01-02 15:04
+  sidebar:
+    emoji: 😜
+    subtitle: 风月好看，人间浪漫。
+    avatar:
+      enabled: true
+      local: true
+      src: images/avatar.png
+  article:
+    math: true
+    toc: true
+    readingTime: true
+    license:
+      enabled: true
+      default: 作品采用 [**知识共享许可协议 署名-非商业性使用-相同方式共享 4.0 (CC BY-NC-SA 4.0)**](https://creativecommons.org/licenses/by-nc-sa/4.0/) 进行许可。
+  comments:
+    enabled: false
+    provider: giscus
+    giscus:
+      repo:
+      repoID:
+      category:
+      categoryID:
+      mapping:
+      lightTheme:
+      darkTheme:
+      reactionsEnabled: 1
+      emitMetadata: 0
+  widgets:
+    homepage:
+      - type: search
+      - type: categories
+        params:
+          limit: 10
+      - type: tag-cloud
+        params:
+          limit: 10
+      - type: archives
+        params:
+          limit: 5
+    page:
+      - type: search
+      - type: toc
+  opengraph:
+    twitter:
+      # Your Twitter username
+      site:
+      # Available values: summary, summary_large_image
+      card: summary_large_image
+  defaultImage:
+    opengraph:
+      enabled: false
+      local: false
+      src:
+  colorScheme:
+    toggle: true
+    default: auto
+  imageProcessing:
+    cover:
+      enabled: true
+    content:
+      enabled: true
+
+menu:
+  main:
+  - name: 首页
+    pageRef: /
+    weight: 1
+    params: 
+      icon: home
+  - name: 搜索
+    pageRef: /search
+    weight: 2
+    params: 
+      icon: search
+  - name: 分类
+    pageRef: /categories
+    weight: 3
+    params: 
+      icon: categories
+  - name: 标签
+    pageRef: /tags
+    weight: 4
+    params: 
+      icon: tag
+  - name: 归档
+    pageRef: /archives
+    weight: 5
+    params: 
+      icon: archives
+  - name: 关于
+    pageRef: /about
+    weight: 6
+    params: 
+      icon: user
+  - name: 链接
+    pageRef: /links
+    weight: 7
+    params: 
+      icon: link
+  social:
+    - identifier: github
+      name: GitHub
+      url: https://github.com/mxtaooo
+      params:
+        icon: brand-github
+    - identifier: mail
+      name: Mail
+      url: mailto:mxtao@foxmail.com
+      params:
+        icon: mail
+
+related:
+  includeNewer: true
+  threshold: 60
+  toLower: false
+  indices:
+    - name: tags
+      weight: 100
+    - name: categories
+      weight: 200
+
+## 统一图片目录，即使
+module:
+  mounts:
+  - source: static
+    target: static
+  - source: images
+    target: static/images
+
+markup:
+  goldmark:
+    renderer:
+      unsafe: true
+    extensions:
+      passthrough:
+        enable: true
+        delimiters:
+          block:
+            - - \[
+              - \]
+            - - $$
+              - $$
+          inline:
+            - - \(
+              - \)
+            - - $
+              - $
+  tableOfContents:
+    ordered: false
+    startLevel: 2
+    endLevel: 4
+  highlight:
+    noClasses: false
+    codeFences: true
+    guessSyntax: true
+    lineNos: true
+    lineNoStart: 1
+    lineNumbersInTable: true
+    tabWidth: 4
