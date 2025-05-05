@@ -4,6 +4,7 @@ description: CTFP博客系列及视频笔记，第一部分
 author: mxtao
 date: 2020-04-07
 modified: 2025-04-27 16:14:00
+draft: true
 ---
 
 # 范畴论 - Part 1

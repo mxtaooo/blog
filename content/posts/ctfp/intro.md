@@ -1,4 +1,6 @@
 ---
+title: 范畴论笔记 - 序
+description: CTFP博客系列及视频笔记，序章
 author: mxtao
 date: 2020-03-15
 ---
@@ -11,7 +13,7 @@ date: 2020-03-15
 
 国内也有大神对系列博客的第一部分进行了翻译。
 
-这里作为一个阅读笔记，期望能在读完之后对范畴论能有自己的理解。
+这一博客系列整理为阅读笔记，期望能在读完之后对范畴论能有自己的理解。
 
 ---
 
@@ -31,24 +33,22 @@ CTFP-PDF：[hmemcpy/milewski-ctfp-pdf](https://github.com/hmemcpy/milewski-ctfp-
 
 ---
 
-## Notes
-
-[Part 1](./category-theory-notes.md)
-
 ## ~~阅读笔记~~
 
 本部分阅读笔记是对于翻译版和原文的对照阅读进行记录，后期比较草率。翻译版本仅第一部分，已重新写了其他笔记，并对内容进行了理解和延申
 
-1. [Category: The Essence of Composition](./1.category-the-essence-of-composition.md)
-2. [Types and Functions](./2.types-and-functions.md)
-3. [Categories Great and Small](./3.categories-great-and-small.md)
-4. [Kleisli Categories](./4.kleisli-categories.md)
-5. [Products and Coproducts](./5.products-and-coproducts.md)
-6. [Simple Algebraic Data Type](./6.simple-algebraic-data-type.md)
-7. [Functors](./7.functors.md)
-8. [Functoriality](./8.functoriality.md)
-9. [Function Type](./9.function-type.md)
-10. [Natural Transformations](./10.natural-transformations.md)
+1. [Category: The Essence of Composition](./part-1/1.category-the-essence-of-composition.md)
+2. [Types and Functions](./part-1/2.types-and-functions.md)
+3. [Categories Great and Small](./part-1/3.categories-great-and-small.md)
+4. [Kleisli Categories](./part-1/4.kleisli-categories.md)
+5. [Products and Coproducts](./part-1/5.products-and-coproducts.md)
+6. [Simple Algebraic Data Type](./part-1/6.simple-algebraic-data-type.md)
+7. [Functors](./part-1/7.functors.md)
+8. [Functoriality](./part-1/8.functoriality.md)
+9. [Function Type](./part-1/9.function-type.md)
+10. [Natural Transformations](./part-1/10.natural-transformations.md)
+
+> 以上文件链接已失效，请查看系列[Part-1](./part-1/)和[Part-2](./part-2/)
 
 ## Table of Contents
 
