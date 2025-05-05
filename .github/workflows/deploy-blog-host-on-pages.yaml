@@ -34,7 +34,7 @@ jobs:
         submodules: true
         fetch-depth: 0
     - name: build website
-      run: hugo -b ${{ vars.PAGES_BASEURL }} -DEF
+      run: HUGO_CANONIFYURLS=true hugo -b ${{ vars.PAGES_BASEURL }} -DEF
     - name: upload artifact
       uses: actions/upload-pages-artifact@v3.0.1
       with:
