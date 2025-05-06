@@ -26,6 +26,9 @@ params:
     customText: >
       网站&nbsp;<a href="https://github.com/mxtaooo/blog-hugo" target="_blank"><b>源代码</b></a>&nbsp;
       存储于&nbsp;<a href="https://github.com" target="_blank">GitHub</a>
+      <br/>
+      文章评论由&nbsp;<a href="https://github.com/mxtaooo/blog/discussions/categories/announcements" target="_blank"><b>Discussions</b></a>
+      &nbsp;&amp;&nbsp;<a href="https://github.com/giscus/giscus" target="_blank"><b>giscus</b></a>&nbsp;提供支持
   dateFormat:
     published: 2006-01-02
     lastUpdated: 2006-01-02 15:04
@@ -44,18 +47,23 @@ params:
       enabled: true
       default: 作品采用 [**知识共享许可协议 署名-非商业性使用-相同方式共享 4.0 (CC BY-NC-SA 4.0)**](https://creativecommons.org/licenses/by-nc-sa/4.0/) 进行许可。
   comments:
-    enabled: false
+    enabled: true
     provider: giscus
     giscus:
-      repo:
-      repoID:
-      category:
-      categoryID:
-      mapping:
-      lightTheme:
-      darkTheme:
+      repo: mxtaooo/blog
+      repoID: R_kgDOOfcrgw
+      category: Announcements
+      categoryID: DIC_kwDOOfcrg84Cp0Ld
+      mapping: title
+      strict: 0
       reactionsEnabled: 1
       emitMetadata: 0
+      inputPosition: bottom
+      lightTheme: light
+      darkTheme: gruvbox_dark
+      # darkTheme: noborder_gray
+      lang: zh-CN
+      loading: lazy
   widgets:
     homepage:
       - type: search
@@ -150,7 +158,7 @@ related:
     - name: categories
       weight: 200
 
-## 统一图片目录，即使
+## 将图片目录挂载到static(网站根目录)，网页(URL引用)和Markdown(文件系统引用)都能正确读取图片
 module:
   mounts:
   - source: static
