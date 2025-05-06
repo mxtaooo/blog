@@ -1,5 +1,10 @@
 ---
-tags: ['Language Feature', 'Higher Kinded Type', 'Scala', 'Haskell']
+title: Higher Kinded Type - 高阶类类型
+description: Higher Kinded Type - 高阶类类型
+author: mxtao
+categories: ["language feature"]
+tags: ["language feature", "scala", "haskell"]
+date: 2020-05-28
 ---
 
 # Higher Kinded Type - 高阶类类型

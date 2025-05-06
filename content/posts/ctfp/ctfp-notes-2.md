@@ -1,15 +1,14 @@
 ---
-title: 范畴论笔记 - Part 2
-description: CTFP博客系列及视频笔记，第二部分
+title: 范畴论笔记 - 第二部分
+description: 范畴论、范畴论笔记CTFP博客系列及视频笔记，第二部分[TBD]
 author: mxtao
+categories: ["category theory", "category theory notes"]
+tags: ["category theory", "category theory for programmers", "TBD"]
 date: 2020-04-07
-modified: 2025-05-05 16:07:00
+modified: 2025-05-06 15:25:00
 draft: true
 ---
 
-# 范畴论 - Part 2
-
-> CTFP博客系列及视频笔记，第二部分
 
 ## 范畴论及声明式编程
 
@@ -22,10 +21,6 @@ draft: true
 
 declarative programming
 
-limits and colimits
-
-端和余端
-
+## limits and colimits / 端和余端
 
 [Limits and Colimits](https://bartoszmilewski.com/2015/04/15/limits-and-colimits/)
-

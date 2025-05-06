@@ -1,3 +1,13 @@
+---
+title: Generic Bound - 泛型约束
+description: Generic Bound - 泛型约束
+author: mxtao
+categories: ["language feature"]
+tags: ["language feature", "TBD"]
+date: 2020-05-30
+draft: true
+---
+
 # 泛型约束
 
 用于约束泛型参数的上界和下界、分为声明点/调用点约束

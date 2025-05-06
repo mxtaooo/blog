@@ -1,3 +1,13 @@
+---
+title: Higer Rank Types / Rank N Types
+description: Higer Rank Types / Rank N Types
+author: mxtao
+categories: ["language feature"]
+tags: ["language feature", "TBD"]
+date: 2020-06-04
+draft: true
+---
+
 # Higer Rank Types / Rank N Types
 
 

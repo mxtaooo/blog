@@ -1,15 +1,14 @@
 ---
-title: 范畴论笔记 - Part 1
-description: CTFP博客系列及视频笔记，第一部分
+title: 范畴论笔记 - 第一部分
+description: 范畴论、范畴论笔记CTFP博客系列及视频笔记，第一部分
 author: mxtao
+categories: ["category theory", "category theory notes"]
+tags: ["category theory", "category theory for programmers", "TBD"]
 date: 2020-04-07
-modified: 2025-04-27 16:14:00
+modified: 2025-05-06 15:25:00
 draft: true
+#image: 
 ---
-
-# 范畴论 - Part 1
-
-> CTFP博客系列及视频笔记，第一部分
 
 ## 范畴 / Category
 

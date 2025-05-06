@@ -2,7 +2,10 @@
 title: 范畴论笔记 - 序
 description: CTFP博客系列及视频笔记，序章
 author: mxtao
+categories: ["category theory", "category theory notes"]
+tags: ["category theory", "category theory for programmers"]
 date: 2020-03-15
+modified: 2025-05-06 15:25:00
 ---
 
 # Category Theory for Programmers
@@ -48,7 +51,7 @@ CTFP-PDF：[hmemcpy/milewski-ctfp-pdf](https://github.com/hmemcpy/milewski-ctfp-
 9. [Function Type](./part-1/9.function-type.md)
 10. [Natural Transformations](./part-1/10.natural-transformations.md)
 
-> 以上文件链接已失效，请查看系列[Part-1](./part-1/)和[Part-2](./part-2/)
+> 以上Markdown文件链接可能失效，可以查看系列[Part-1](../part-1/)和[Part-2](../part-2/)
 
 ## Table of Contents
 

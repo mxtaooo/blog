@@ -1,4 +1,12 @@
-
+---
+title: Variant - 泛型可变性
+description: Variant - 泛型可变性
+author: mxtao
+categories: ["language feature"]
+tags: ["language feature", "TBD"]
+date: 2020-05-30
+draft: true
+---
 # 泛型可变性
 
 variant covariant contravariant

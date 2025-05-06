@@ -1,5 +1,7 @@
 ---
+title: 通过实现“快排”对比OO&FP
 author: mxtao
+tags: ["functional programming", "quick sort"]
 date: 2016-11-07
 ---
 
