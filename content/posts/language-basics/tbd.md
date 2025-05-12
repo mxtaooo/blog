@@ -114,10 +114,6 @@ Monad
 
 [Spark SQL Reference](http://spark.apache.org/docs/latest/sql-ref.html)
 
-## Markdown
-
-Markdown Language
-
 ## YAML
 
 [The Official YAML Web Site](https://yaml.org/)
