@@ -1,8 +1,8 @@
 ---
 title: Learn Windows PowerShell 3 in a Month of Lunches - Review lab 1 (chapters 1–6)
 description: Learn Windows PowerShell 3 in a Month of Lunches - Review lab 1 (chapters 1–6)
-categories: ["programming language"]
-tags: ["programming language", "powershell"]
+categories: ["language"]
+tags: ["powershell"]
 author: mxtao
 date: 2017-08-14
 ---

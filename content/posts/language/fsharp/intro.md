@@ -1,8 +1,8 @@
 ---
 title: F#
 description: F# 
-categories: ["programming language"]
-tags: ["programming language", "f#"]
+categories: ["language"]
+tags: ["f#"]
 author: mxtao
 date: 2017-07-23
 ---

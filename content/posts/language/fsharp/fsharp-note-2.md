@@ -1,8 +1,8 @@
 ---
 title: F#-Notes-2 Imperative Programming
 description: F# Imperative Programming - F# 命令式编程
-categories: ["programming language"]
-tags: ["programming language", "f#"]
+categories: ["language"]
+tags: ["f#"]
 author: mxtao
 date: 2017-10-16
 ---

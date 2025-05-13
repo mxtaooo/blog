@@ -2,8 +2,8 @@
 title: Java语言功能更新
 description: Java语言相关的功能更新(9->21(LTS))(2017-09->2023-09)
 author: mxtao
-categories: ["language basics"]
-tags: ["language basics", "java"]
+categories: ["language"]
+tags: ["java"]
 date: 2025-05-08
 modified: 2025-05-11 09:00:00
 ---

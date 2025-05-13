@@ -2,8 +2,8 @@
 title: language basics tbd
 description: 语言基础相关的知识整理计划
 author: mxtao
-categories: ["language basics"]
-tags: ["language basics", "TBD"]
+categories: ["language"]
+tags: ["TBD"]
 date: 2025-05-07
 modified: 2025-05-07 14:10:00
 draft: true
@@ -122,3 +122,7 @@ Monad
 ```yaml
 # `#`引导注释行
 ```
+
+## Python
+
+...

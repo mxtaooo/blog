@@ -2,8 +2,8 @@
 title: Higher Kinded Type - 高阶类类型
 description: Higher Kinded Type - 高阶类类型
 author: mxtao
-categories: ["language feature"]
-tags: ["language feature", "scala", "haskell"]
+categories: ["language"]
+tags: ["generic", "higher kinded type", "scala", "haskell"]
 date: 2020-05-28
 ---
 

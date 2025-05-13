@@ -1,8 +1,8 @@
 ---
 title: F# Automatic Generalization - F# 自动泛化
 description: F# Automatic Generalization related issue
-categories: ["programming language"]
-tags: ["programming language", "f#"]
+categories: ["language"]
+tags: ["f#", "generic"]
 author: mxtao
 date: 2020-05-04
 modified: 2020-07-15 20:50:00

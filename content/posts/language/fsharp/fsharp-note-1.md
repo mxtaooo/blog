@@ -1,8 +1,8 @@
 ---
 title: F#-Notes-1 Functional Programming
 description: F# Functional Programming - F# 函数式编程
-categories: ["programming language"]
-tags: ["programming language", "f#"]
+categories: ["language"]
+tags: ["f#"]
 author: mxtao
 date: 2017-07-23
 ---

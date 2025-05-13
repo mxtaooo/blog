@@ -1,8 +1,8 @@
 ---
 title: Scala Style
 description: Scala Style
-categories: ["programming language"]
-tags: ["programming language", "scala"]
+categories: ["language"]
+tags: ["scala", "code style"]
 author: mxtao
 date: 2020-07-16
 modified: 2020-08-10 21:20:00

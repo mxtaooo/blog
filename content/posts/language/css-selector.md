@@ -1,8 +1,8 @@
 ---
 title: CSS选择器
-description: CSS 选择器
-categories: ["programming language"]
-tags: ["programming language", "css"]
+description: CSS选择器
+categories: ["language"]
+tags: ["css"]
 author: mxtao
 date: 2017-07-29
 ---

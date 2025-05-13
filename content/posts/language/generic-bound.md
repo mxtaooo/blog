@@ -2,8 +2,8 @@
 title: Generic Bound - 泛型约束
 description: Generic Bound - 泛型约束
 author: mxtao
-categories: ["language feature"]
-tags: ["language feature", "TBD"]
+categories: ["language"]
+tags: ["generic", "generic bound", "TBD"]
 date: 2020-05-30
 draft: true
 ---
