@@ -664,17 +664,185 @@ class Program
 
 ## 可变性
 
-[Covariance and Contravariance (C#)](https://learn.microsoft.com/en-us/dotnet/csharp/programming-guide/concepts/covariance-contravariance/)
+可变性(variance)包含协变(covariance)、逆变(contravariance)和不变(invariance)。\
+语言层面的可变性支持是类型系统支持多态的关键部分，有的是由严格的语法支持，有的语言通过子类型兼容性简介体现。
 
+简单来讲，协变(covariance)是指子类型可以赋值给父类型，常用于返回值(输出)场景；
+逆变(contravariance)是指父类型可以赋值给子类型，常用于参数(输入)场景；
+不变(invariance)是指完全相同的类型才能赋值，最安全也最严格。
 
-协变与逆变不是泛型约束，而是泛型类型参数的类型关系控制机制
+可变性的核心概念(类型转换中派生类与基类之间的方向)在非泛型场景中也存在，但一般是隐式的，或称为“类型兼容性”问题。
+有些“类型兼容性”问题(例如数组协变)依赖编译器推断，但在运行时检查，可能抛出异常。
+常规场景中，**参数逆变，返回值协变**，便已是足够完善可靠的规则。
+
+| 语言 | 协变(covariant) | 逆变(contravariant) | 说明 |
+| - | - | - | - |
+| **C#** | ✅ `out` | ✅ `in` | 泛型接口/委托支持，数组协变（但运行时检查） |
+| **Java** | ✅ `? extends`  | ✅ `? super` | 使用通配符在泛型中表达变体，没有关键字（只能在使用处） |
+| **Scala** | ✅ `+T` | ✅ `-T` | 在泛型定义中支持变体标注，极其灵活 |
+| **Python** | ✅（Typing 协变） | ✅（Typing 逆变） | 使用 `typing.Generic` + `covariant=True` 表达 |
+| **Kotlin** | ✅ `out T` | ✅ `in T` | 类似 C#，在泛型类型定义中支持关键字 | 
+| **Swift** | ✅ 协变支持 | ✅（使用 protocol） | 支持返回值协变、协议泛型逆变较间接 |
+| **TypeScript** | ✅ 自动推导 | ✅ 自动推导 | 没有变体关键字，但函数/接口参数/返回值类型由结构类型系统自动推导 |
+| **Rust** | ⚠️ 不支持协变/逆变关键字 | ⚠️ 不支持显式变体 | 有复杂的生命周期变体（'a: 'b）机制，不针对泛型类型参数 |
+
+| 语言 | 泛型定义处变体 | 使用处变体 | 自动推导 | 安全检查 | 使用推荐度 |
+| - | - | - | - | - | - |
+| C# | ✅ `in`/`out` | ✅ 委托 | ❌ | ✅ 编译时 | ✅✅✅ |
+| Java | ❌ | ✅ `? extends` / `? super` | ❌ | ✅ 编译时 | ✅✅ |
+| Scala | ✅ `+T` / `-T` | ✅ | ✅ | ✅ | ✅✅✅✅ |
+| Kotlin | ✅ `out T` / `in T` | ✅ | ✅ | ✅ | ✅✅✅ |
+| Swift | ❌ | 部分支持 | ❌ | ✅ | ✅✅ |
+| TypeScript | ❌ | ✅ | ✅✅✅  | ✅（结构化） | ✅✅✅ |
+| Python | ✅ (Typing) | ✅ | ❌ | ✅（类型检查器） | ✅✅ |
+| Rust | ❌ 泛型不支持 | ❌ | ❌ | ✅（生命周期） | ✅（不同维度） |
+
+> 上表整理自ChatGPT,其中Kotlin/Swift/TypeScript/Rust的相关内容尚未审慎求证。
 
 ### C#
 
-#### 方法
+> 官方文档:\ 
+> 1. [Covariance and contravariance in generics](https://learn.microsoft.com/en-us/dotnet/standard/generics/covariance-and-contravariance)
+> 1. [Covariance and Contravariance (C#) - Overview](https://learn.microsoft.com/en-us/dotnet/csharp/programming-guide/concepts/covariance-contravariance/)
+> 1. [Variance in Generic Interfaces (C#)](https://learn.microsoft.com/en-us/dotnet/csharp/programming-guide/concepts/covariance-contravariance/variance-in-generic-interfaces)
+> 1. [Creating Variant Generic Interfaces (C#)](https://learn.microsoft.com/en-us/dotnet/csharp/programming-guide/concepts/covariance-contravariance/creating-variant-generic-interfaces)
+> 1. [Using Variance in Interfaces for Generic Collections (C#)](https://learn.microsoft.com/en-us/dotnet/csharp/programming-guide/concepts/covariance-contravariance/using-variance-in-interfaces-for-generic-collections)
+> 1. [Variance in Delegates (C#)](https://learn.microsoft.com/en-us/dotnet/csharp/programming-guide/concepts/covariance-contravariance/variance-in-delegates)
+> 1. [Using Variance in Delegates (C#)](https://learn.microsoft.com/en-us/dotnet/csharp/programming-guide/concepts/covariance-contravariance/using-variance-in-delegates)
+> 1. [Using Variance for Func and Action Generic Delegates (C#)](https://learn.microsoft.com/en-us/dotnet/csharp/programming-guide/concepts/covariance-contravariance/using-variance-for-func-and-action-generic-delegates)
 
-#### 委托中
 
+#### 泛型接口/委托中的可变性
+
+> 泛型类、泛型方法中不能独立使用可变性修饰符`in`/`out`
+
+```csharp
+// 定义泛型接口(实际是标准库中的类型，此处用以演示)
+// 比较器接口(逆变)
+public interface IEqualityComparer<in T>
+{
+    bool Equals(T? x, T? y);
+    int GetHashCode([DisallowNull] T obj);
+}
+// 只读集合接口(协变)
+public interface IReadOnlyList<out T> : IEnumerable<T>, IEnumerable, IReadOnlyCollection<T>
+{
+    T this[int index] { get; }
+}
+
+// 简单的继承关系
+class Base { }
+class Derived : Base { }
+
+// 实现基类的比较器
+class BaseComparer : IEqualityComparer<Base>
+{
+    public int GetHashCode(Base baseInstance)
+    {
+        return baseInstance.GetHashCode();
+    }
+
+    public bool Equals(Base? x, Base? y)
+    {
+        return x == y;
+    }
+}
+
+// 基类的比较器可以作为派生类的比较器使用，此处体现了逆变
+IEqualityComparer<BaseClass> baseComparer = new BaseComparer();
+IEqualityComparer<DerivedClass> childComparer = baseComparer;
+
+// 子类的集合可以作为基类的集合的使用，体现了协变
+IReadOnlyList<Derived> childList = [];
+IReadOnlyList<Base> baseList = childList;
+```
+
+```csharp
+// 泛型委托定义，参数逆变，返回值协变
+public delegate TResult Func<in T, out TResult>(T arg);
+
+// 两个委托实例
+// 委托1：接受派生类，返回基类
+Func<Derived, Base> func1 = (Derived d) =>
+{
+    Console.WriteLine(d);
+    return new Base();
+};
+// 委托2：接受基类，返回派生类
+Func<Base, Derived> func2 = (Base b) =>
+{
+    Console.WriteLine(b);
+    return new Derived();
+};
+
+// 参数逆变：委托1期望接受派生类，实际可以接受基类
+// 返回值协变：委托1期望返回基类，实际可以返回派生类
+// 因此以下赋值是有效的(类型兼容)，委托2的实例可以作为委托1的实例调用
+func1 += func2;
+```
+
+#### 非泛型场景中的可变性
+
+1. 数组协变(强烈**不推荐**使用)
+
+```csharp
+// 构造字符串数组实例，可以赋值给对象数组
+object[] array = new string[] { "a", "b", "c" };
+// 一般的读取不会有类型安全问题
+var value = array[0];
+// 赋值语句可以通过编译，但会在运行时抛出异常
+array[0] = 1;
+```
+
+> 类型不安全。\
+> 该功能是编译器隐式支持的功能，但在**运行时检查安全性**。\
+> 协变的数组变量不存在严格的**写保护**，极有可能出现不经意的赋值操作，生产环境中应当**避免使用**。
+
+2. 方法重写返回值类
+
+```csharp
+class A
+{
+    // 基类型中定义虚方法，返回值是基类型A
+    public virtual A CreateInstance() { return new A(); }
+}
+
+class B : A
+{
+    // 派生类中重写方法，返回值类型是派生类型B，返回值协变
+    public override B CreateInstance() { return new B(); }
+}
+```
+
+> 类型安全。\
+> 该功能是编译器隐式支持的功能。\
+> 虚方法在子类中重写时，参数必须保持一致，但返回值可以是更具体的类型(返回值是协变的)，两个方法依然是“类型兼容”的。
+
+3. 非泛型委托的协变和逆变
+
+```csharp
+// 定义基类型Animal及派生类型Dog
+class Animal { }
+class Dog : Animal { }
+
+// 定义委托类型
+delegate Animal Creator();
+delegate void Handler(Dog dog);
+
+// 定义普通方法
+static Dog CreateDog() { return new Dog(); }
+static void FeedAnimal(Animal animal) { }
+
+// 方法可以构造为委托实例
+Creator creator = CreateDog;    // 返回值协变
+Handler handler = FeedAnimal;   // 参数逆变
+```
+
+> 类型安全。\
+> 该功能是编译器隐式支持的功能。\
+> 委托`Creator`期望**生产**`Animal`实例，实际上得到`Dog`实例，*`Dog`作为`Animal`使用是类型安全的*，因此`Dog`生产者作为`Animal`生产者也是类型安全的。这体现的是协变。\
+> 委托`Handler`期望**消费**`Dog`实例，因此调用`Handler`时给出的必定是`Dog`(或`Dog`派生类)实例，现在`handler`实际上是个消费`Animal`的实例，*`Dog`作为`Animal`使用是类型安全的，消费`Animal`的方法消费`Dog`也是类型安全的*，因此`Animal`消费者作为`Dog`消费者也是类型安全的。这体现的是逆变。\
+> 委托可以视为类型安全的函数类型，函数类型也可以视为*构造类型*(由参数类型+返回类型构造),在这个视角看待*类型兼容*也许有不一样的发现。可参考本站文章CTFP(category theory for programmer/面向程序员的范畴论)中协变和逆变的相关内容。
 
 ## 高阶泛型
 
