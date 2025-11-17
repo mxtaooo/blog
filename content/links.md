@@ -32,9 +32,9 @@ comments: false
 
 ## 有趣的项目
 
+> 待补充
 
 ## 很好的博客
 
-[What is the difference between monoid and monad?](https://www.quora.com/What-is-the-difference-between-monoid-and-monad)
-
-[<译> MIT 为何停掉 SICP？](https://segmentfault.com/a/1190000005064958)
++ [What is the difference between monoid and monad?](https://www.quora.com/What-is-the-difference-between-monoid-and-monad)
++ [<译> MIT 为何停掉 SICP？](https://segmentfault.com/a/1190000005064958)
