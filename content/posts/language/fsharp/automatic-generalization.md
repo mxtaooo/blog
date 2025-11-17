@@ -5,6 +5,7 @@ categories: ["language"]
 tags: ["f#", "generic"]
 author: mxtao
 date: 2020-05-04
+draft: true
 modified: 2020-07-15 20:50:00
 ---
 

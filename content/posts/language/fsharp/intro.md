@@ -5,6 +5,7 @@ categories: ["language"]
 tags: ["f#"]
 author: mxtao
 date: 2017-07-23
+draft: true
 ---
 
 # F#

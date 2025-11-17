@@ -6,7 +6,8 @@ categories: ["category theory", "category theory notes"]
 tags: ["category theory", "category theory for programmers", "TBD"]
 date: 2020-04-07
 modified: 2025-05-06 15:25:00
-draft: true
+#实际尚有内容待补充
+#draft: true
 #image: 
 ---
 
