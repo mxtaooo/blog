@@ -20,7 +20,8 @@ jobs:
         submodules: true
         fetch-depth: 0
     - name: build website
-      run: hugo -b ${{ vars.VPS_BASEURL }} -DEF
+      # 移除参数`-DEF`，确保VPS只托管“当前有效”内容
+      run: hugo -b ${{ vars.VPS_BASEURL }}
     - name: create artifact
       run: tar -C public/ -czf release.tgz .
     - name: transfer artifact via scp
