@@ -6,7 +6,8 @@ categories: ["language"]
 tags: ["generic", "C#", "F#", "Java", "Scala", "Python", "TBD"]
 date: 2025-05-16
 modified: 2025-05-16 17:30:00
-draft: true
+## 实际还有内容待补充
+# draft: true
 ---
 
 # 泛型
