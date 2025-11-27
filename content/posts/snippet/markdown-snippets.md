@@ -2,7 +2,7 @@
 title: Markdown语法记录
 description: 偶尔需要查阅语法的内容类型
 author: mxtao
-categories: ["language"]
+categories: ["snippet"]
 tags: ["markdown"]
 date: 2025-05-12
 modified: 2025-05-12 16:30:00
