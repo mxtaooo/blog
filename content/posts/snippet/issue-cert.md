@@ -5,7 +5,7 @@ author: mxtao
 categories: ["snippet"]
 tags: ["bash", "openssl"]
 date: 2025-08-21
-modified: 2025-11-01 10:00:00
+modified: 2025-12-15 10:00:00
 ---
 
 > 脚本应当在`Bash`环境中执行，且必须部署`faketime`、`openssl`命令行工具
@@ -16,6 +16,8 @@ modified: 2025-11-01 10:00:00
 >    + `BASIC`: 验证当前证书对`localhost`/`127.0.0.1`颁发即可,若验证不通过,颁发`localhost`/`127.0.0.1`的证书(构建镜像时默认使用该配置)
 >    + `NORMAL`: 验证当前证书对`localhost`/`127.0.0.1`颁发即可,若验证不通过,颁发`<hostname>`/`<hostip>`/`localhost`/`127.0.0.1`的证书(启动时建议使用该配置)
 >    + `STRICT`: 验证当前证书对`<hostname>`/`<hostip>`/`localhost`/`127.0.0.1`颁发,若验证不通过,颁发`<hostname>`/`<hostip>`/`localhost`/`127.0.0.1`的证书
+
+> 2025-12-15: 已颁发证书校验部分更新为`openssl verify`命令，支持泛域名，支持各种IPv6格式，修复基于文本匹配的校验不严谨问题
 
 ```bash
 #!/bin/bash
@@ -91,16 +93,27 @@ SERVER_CERT_CHAIN="$SERVER_CERT_ROOT/fullchain.crt"  # 证书链(通常是PEM格
 
 ## 校验现有证书有效性(是否对给定的名称/地址有效;是否处于有效期)
 if [[ -f "$SERVER_CERT_CRT" ]]; then
-    SAN_CONTENT=$(openssl x509 -in "$SERVER_CERT_CRT" -noout -text | grep -A 1 "Subject Alternative Name" || echo "")
     if [[ -n "$CERT_HOST" ]]; then
         info "已设置环境变量[CERT_HOST]=[$CERT_HOST],将逐个验证是否已颁发证书"
         for host in $CERT_HOST;
         do
-            if echo "$SAN_CONTENT" | grep -q "$host" ; then
-                success "[√]已颁发证书[$host]"
+            if [[ $host =~ ^([0-9]{1,3}\.){3}[0-9]{1,3}$ || $host == *:* ]]; then
+                # 简单的IPv4正则，将4组最长3位的数字视为IPv4地址
+                # 包含冒号视为IPv6地址
+                if openssl verify -verify_ip "$host" "$SERVER_CERT_CRT" > /dev/null 2>&1; then
+                    success "[√]已颁发地址证书[$host]"
+                else
+                    error "[×]未颁发地址证书[$host]"
+                    ISSUE_CERT=TRUE
+                fi
             else
-                error "[×]未颁发证书[$host]"
-                ISSUE_CERT=TRUE
+                # 其余的视为名称/域名
+                if openssl verify -verify_hostname "$host" "$SERVER_CERT_CRT" > /dev/null 2>&1; then
+                    success "[√]已颁发名称证书[$host]"
+                else
+                    error "[×]未颁发名称证书[$host]"
+                    ISSUE_CERT=TRUE
+                fi
             fi
         done
     else
@@ -117,11 +130,23 @@ if [[ -f "$SERVER_CERT_CRT" ]]; then
     fi
     for host in $LOCALHOST;
     do
-        if echo "$SAN_CONTENT" | grep -q "$host" ; then
-            success "[√]已颁发证书[$host]"
+        if [[ $host =~ ^([0-9]{1,3}\.){3}[0-9]{1,3}$ || $host == *:* ]]; then
+            # 简单的IPv4正则，将4组最长3位的数字视为IPv4地址
+            # 包含冒号视为IPv6地址
+            if openssl verify -verify_ip "$host" "$SERVER_CERT_CRT" > /dev/null 2>&1; then
+                success "[√]已颁发地址证书[$host]"
+            else
+                error "[×]未颁发地址证书[$host]"
+                ISSUE_CERT=TRUE
+            fi
         else
-            error "[×]未颁发证书[$host]"
-            ISSUE_CERT=TRUE
+            # 其余的视为名称/域名
+            if openssl verify -verify_hostname "$host" "$SERVER_CERT_CRT" > /dev/null 2>&1; then
+                success "[√]已颁发名称证书[$host]"
+            else
+                error "[×]未颁发名称证书[$host]"
+                ISSUE_CERT=TRUE
+            fi
         fi
     done
     info "证书有效期范围[$(date -d "$(openssl x509 -in "$SERVER_CERT_CRT" -noout -startdate | cut -d= -f2)" +'%F %T'), $(date -d "$(openssl x509 -in "$SERVER_CERT_CRT" -noout -enddate | cut -d= -f2)" +'%F %T')]"
@@ -266,4 +291,3 @@ success "证书(PEM): $SERVER_CERT_CRT"
 success "私钥: $SERVER_CERT_KEY"
 success "证书链(PEM): $SERVER_CERT_CHAIN"
 ```
-
