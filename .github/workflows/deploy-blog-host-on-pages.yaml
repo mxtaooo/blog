@@ -36,9 +36,9 @@ jobs:
     - name: build website
       run: HUGO_CANONIFYURLS=true hugo -b ${{ vars.PAGES_BASEURL }} -DEF
     - name: upload artifact
-      uses: actions/upload-pages-artifact@v3.0.1
+      uses: actions/upload-pages-artifact@v4
       with:
         path: ./public
     - name: Deploy to GitHub Pages
       id: deployment
-      uses: actions/deploy-pages@v4.0.5
+      uses: actions/deploy-pages@v4

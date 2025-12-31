@@ -23,9 +23,9 @@ jobs:
       # 移除参数`-DEF`，确保VPS只托管“当前有效”内容
       run: hugo -b ${{ vars.VPS_BASEURL }}
     - name: create artifact
-      run: tar -C public/ -czf release.tgz .
+      run: tar -C public/ --no-same-owner --no-same-permissions -czf release.tgz .
     - name: transfer artifact via scp
-      uses: appleboy/scp-action@v1.0.0
+      uses: appleboy/scp-action@v1
       with:
         host: ${{ secrets.VPS_HOST }}
         username: ${{ secrets.VPS_USER }}
@@ -33,28 +33,27 @@ jobs:
         key: ${{ secrets.VPS_KEY }}
         rm: true
         source: ./release.tgz
-        target: /tmp/github-actions/
+        target: /tmp/
     - name: deploy blog via ssh
-      uses: appleboy/ssh-action@v1.2.1
+      uses: appleboy/ssh-action@v1
       with:
         host: ${{ secrets.VPS_HOST }}
         username: ${{ secrets.VPS_USER }}
         port: ${{ secrets.VPS_PORT }}
         key: ${{ secrets.VPS_KEY }}
         script: |
-          [ -d /home/apps/blog ] && \
+          [ -d /opt/apps/blog ] && \
             ( echo ">>>backup running version..." && \
-            cd /home/apps/ && tar -czvf blog-bak-$(date '+%Y%m%d%H%M%S').tgz blog && \
+            cd /opt/apps/ && tar -czvf blog-bak-$(date '+%Y%m%d%H%M%S').tgz blog && \
             rm -rf blog/* )
 
-          [ $(ls -t /home/apps/ | grep 'blog-bak-' | wc -l) -gt 5 ] && \
+          [ $(ls -t /opt/apps/ | grep 'blog-bak-' | wc -l) -gt 5 ] && \
             ( echo ">>>delete oldest backup(s)..." && \
-            cd /home/apps/ && \
+            cd /opt/apps/ && \
             rm -fv $(ls -t | grep 'blog-bak-' | tail +6) )
 
           echo ">>>release current version..." && \
-            mkdir -p /home/apps/blog/ && \
-            tar -C /home/apps/blog/ -xzvf /tmp/github-actions/release.tgz && \
-            chown -R ${{ secrets.VPS_USER }}:${{ secrets.VPS_USER }} /home/apps/blog && \
+            mkdir -p /opt/apps/blog/ && \
+            tar -C /opt/apps/blog/ -xzvf /tmp/release.tgz && \
             echo ">>>delete artifact..." && \
-            rm -fv /tmp/github-actions/release.tgz
+            rm -fv /tmp/release.tgz
