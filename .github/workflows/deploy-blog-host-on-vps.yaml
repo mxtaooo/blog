@@ -31,7 +31,6 @@ jobs:
         username: ${{ secrets.VPS_USER }}
         port: ${{ secrets.VPS_PORT }}
         key: ${{ secrets.VPS_KEY }}
-        rm: true
         source: ./release.tgz
         target: /tmp/
     - name: deploy blog via ssh
