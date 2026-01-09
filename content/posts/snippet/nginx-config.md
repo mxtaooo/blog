@@ -5,7 +5,7 @@ author: mxtao
 categories: ["snippet"]
 tags: ["clash", "mihomo", "nginx"]
 date: 2025-12-23
-modified: 2025-12-23 15:30:00
+modified: 2026-01-09 10:00:00
 ---
 
 nginx配置文件位于`/etc/nginx`目录，其中核心配置是`/etc/nginx/nginx.conf`，一般默认加载`/etc/nginx/sites-enabled/`目录中的站点配置。
@@ -27,18 +27,18 @@ map $http_connection $connection_upgrade {
 
 # HTTP服务 重定向到HTTPS
 server {
-    listen 80 http2;
-    listen [::]:80 http2;
+    listen 80;
+    listen [::]:80;
     server_name example.com *.example.com;
     return 301 https://$server_name$request_uri;
 }
 
 # example.com 站点服务
 server {
-    listen 443 ssl http2;
-    listen [::]:443 ssl http2;
+    listen 443 ssl;
+    listen [::]:443 ssl;
+    http2 on;
     server_name example.com;
-    gzip off;
 
     # 默认跳转到博客站(也可以直接跳转)
     location / {
@@ -69,7 +69,6 @@ server {
     listen 443 ssl;
     listen [::]:443 ssl;
     server_name ws.example.com;
-    gzip off;
     location / {
         add_header Content-Type 'text/plain; charset=utf-8';
         return 200 'hello, this is ws.example.com';
@@ -89,10 +88,10 @@ server {
 
 # grpc.example.com 站点服务
 server {
-    listen 443 ssl http2;
-    listen [::]:443 ssl http2;
+    listen 443 ssl;
+    listen [::]:443 ssl;
+    http2 on;
     server_name grpc.example.com;
-    gzip off;
     location / {
         add_header Content-Type 'text/plain; charset=utf-8';
         return 200 'hello, this is grpc.example.com';
@@ -108,7 +107,6 @@ server {
     listen 443 ssl;
     listen [::]:443 ssl;
     server_name blog.example.com;
-    gzip off;
     root /path/to/blog/root;
     location / {
         index index.html;
@@ -120,7 +118,6 @@ server {
     listen 443 ssl;
     listen [::]:443 ssl;
     server_name pxy.example.com;
-    gzip off;
     location / {
         proxy_redirect off;
         proxy_ssl_server_name on;
@@ -133,7 +130,6 @@ server {
     listen 443 ssl;
     listen [::]:443 ssl;
     server_name *.example.com;
-    gzip off;
     error_page 404 = /error;
     location / {
         add_header Content-Type 'text/plain; charset=utf-8';

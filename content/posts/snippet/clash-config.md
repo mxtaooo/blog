@@ -5,7 +5,7 @@ author: mxtao
 categories: ["snippet"]
 tags: ["clash", "mihomo", "nginx"]
 date: 2025-12-12
-modified: 2025-12-23 10:30:00
+modified: 2026-01-09 10:00:00
 ---
 
 ## 数据链路
@@ -110,11 +110,11 @@ map $http_connection $connection_upgrade {
 
 server {
     # 监听443端口，启用SSL加密，启用HTTP2(以支持gRPC)
-    listen 443 ssl http2;
-    listen [::]:443 ssl http2;
+    listen 443 ssl;
+    listen [::]:443 ssl;
+    http2 on;
     # 服务器名称
     server_name <server-name>;
-    gzip off;
     # 常规站点配置
     location / {
         add_header Content-Type 'text/plain; charset=utf-8';

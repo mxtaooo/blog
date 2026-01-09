@@ -5,7 +5,7 @@ author: mxtao
 categories: ["snippet"]
 tags: ["bash", "openssl"]
 date: 2025-08-21
-modified: 2025-12-15 10:00:00
+modified: 2026-01-09 10:00:00
 ---
 
 > 脚本应当在`Bash`环境中执行，且必须部署`faketime`、`openssl`命令行工具
@@ -90,6 +90,10 @@ SERVER_CERT_CSR="$SERVER_CERT_ROOT/server.csr"  # 证书颁发请求
 SERVER_CERT_CRT="$SERVER_CERT_ROOT/server.crt"  # 证书(通常是PEM格式)
 SERVER_CERT_KEY="$SERVER_CERT_ROOT/server.key"  # 证书私钥
 SERVER_CERT_CHAIN="$SERVER_CERT_ROOT/fullchain.crt"  # 证书链(通常是PEM格式)
+SERVER_CERT_P12="$SERVER_CERT_ROOT/server.p12"  # 证书(PKCS12格式)
+SERVER_CERT_P12_PASS="$SERVER_CERT_ROOT/server.p12.pass"  # 证书密钥(仅适用于PKCS12格式)
+
+SERVER_CERT_COMMON_NAME={$COMMON_NAME:-localhost}
 
 ## 校验现有证书有效性(是否对给定的名称/地址有效;是否处于有效期)
 if [[ -f "$SERVER_CERT_CRT" ]]; then
@@ -203,7 +207,8 @@ C = CN
 ST = Shandong
 L = Qingdao
 O = Shandong R&D Center
-CN = host.domain
+OU = Qingdao R&D Center
+CN = $SERVER_CERT_COMMON_NAME
 
 [v3_req]
 keyUsage = critical, digitalSignature, keyEncipherment, dataEncipherment
@@ -272,20 +277,31 @@ done
 
 info "生成CSR(证书颁发请求)"
 openssl req -new -config "$SERVER_CERT_CSR_CONF" -keyout "$SERVER_CERT_KEY" -out "$SERVER_CERT_CSR"
-if [[ "$(date +%d)" = "01" ]]; then
-    CERT_START="$(date -d '-1 month' +%Y-%m-01) 00:00:00"
-    warn "当前日期是[$(date +%Y-%m-%d)],为避免时区问题导致证书无效,生效开始时间设为上个月[$(date -d '-1 month' +%Y-%m-%d)]"
+
+if command -v faketime > /dev/null 2>&1; then
+    if [[ "$(date +%d)" = "01" ]]; then
+        CERT_START="$(date -d '-1 month' +%Y-%m-01) 00:00:00"
+        warn "当前日期是[$(date +%Y-%m-%d)],为避免时区问题导致证书无效,生效开始时间设为上个月[$(date -d '-1 month' +%Y-%m-%d)]"
+    else
+        CERT_START="$(date +%Y-%m-01) 00:00:00"
+    fi
+    info "颁发证书，自[$CERT_START(UTC)]起生效，有效期十年(用faketime控制有效期,启用X509v3扩展以支持SAN)"
+    TZ=UTC faketime "$CERT_START" openssl x509 -req -in "$SERVER_CERT_CSR" -extfile "$SERVER_CERT_CSR_CONF" -extensions "v3_req" -out "$SERVER_CERT_CRT" -outform PEM -CA "$CA_CRT" -CAkey "$CA_KEY" -passin "file:$CA_KEY_PASS" -CAcreateserial -days 3650 -sha256
 else
-    CERT_START="$(date +%Y-%m-01) 00:00:00"
+    info "颁发证书，立即生效，有效期十年(启用X509v3扩展以支持SAN)"
+    openssl x509 -req -in "$SERVER_CERT_CSR" -extfile "$SERVER_CERT_CSR_CONF" -extensions "v3_req" -out "$SERVER_CERT_CRT" -outform PEM -CA "$CA_CRT" -CAkey "$CA_KEY" -passin "file:$CA_KEY_PASS" -CAcreateserial -days 3650 -sha256
 fi
-info "颁发证书，自[$CERT_START(UTC)]起生效，有效期十年(用faketime控制有效期,启用X509v3扩展以支持SAN)"
-TZ=UTC faketime "$CERT_START" openssl x509 -req -in "$SERVER_CERT_CSR" -extfile "$SERVER_CERT_CSR_CONF" -extensions "v3_req" -out "$SERVER_CERT_CRT" -outform PEM -CA "$CA_CRT" -CAkey "$CA_KEY" -passin "file:$CA_KEY_PASS" -CAcreateserial -days 3650 -sha256
+
 success "证书颁发完成,证书信息如下:"
 openssl x509 -in "$SERVER_CERT_CRT" -noout -text
+
 info "生成证书链"
 cat "$SERVER_CERT_CRT" "$CA_CRT" > "$SERVER_CERT_CHAIN"
-## 将证书转为PKCS12格式(SpringBoot直接支持)
-openssl pkcs12 -export -in "$SERVER_CERT_CHAIN" -inkey "$SERVER_CERT_KEY" -out "$SERVER_CERT_P12" -name "$SERVER_CERT_COMMON_NAME" -password "pass:$SERVER_CERT_P12_PASS"
+
+info "生成证书密钥(PKCS12)"
+cat /proc/sys/kernel/random/uuid > $SERVER_CERT_P12_PASS
+info "生成证书(PKCS12)"
+openssl pkcs12 -export -in "$SERVER_CERT_CHAIN" -inkey "$SERVER_CERT_KEY" -out "$SERVER_CERT_P12" -name "$SERVER_CERT_COMMON_NAME" -password "file:$SERVER_CERT_P12_PASS"
 
 success "证书(PEM): $SERVER_CERT_CRT"
 success "私钥: $SERVER_CERT_KEY"
