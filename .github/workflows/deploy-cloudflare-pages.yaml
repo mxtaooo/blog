@@ -21,10 +21,10 @@ jobs:
         submodules: true
         fetch-depth: 0
     - name: build website
-      run: HUGO_CANONIFYURLS=true hugo -b ${{ vars.CF_PAGES_BASEURL }} -DEF
+      run: hugo
     - name: Deploy to Cloudfalre Pages
       uses: cloudflare/wrangler-action@v4
       with:
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          command: deploy --name blog --assets ./public --compatibility-date "$(date +%F)"
+          command: pages deploy ./public --name blog
