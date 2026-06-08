@@ -1,0 +1,30 @@
+name: deploy blog, host on cloudflare pages
+
+on:
+  push:
+    branches:
+    - deploy
+
+jobs:
+  host-on-cloudflare-pages:
+    runs-on: ubuntu-latest
+    steps:
+    - name: setup hugo
+      uses: peaceiris/actions-hugo@v3
+      with:
+        hugo-version: latest
+        extended: true
+    - name: checkout source code
+      uses: actions/checkout@v6
+      with:
+        ref: deploy
+        submodules: true
+        fetch-depth: 0
+    - name: build website
+      run: HUGO_CANONIFYURLS=true hugo -b ${{ vars.CF_PAGES_BASEURL }} -DEF
+    - name: Deploy to Cloudfalre Pages
+      uses: cloudflare/wrangler-action@v4
+      with:
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          command: pages deploy ./public --project-name=blog
