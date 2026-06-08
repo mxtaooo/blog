@@ -27,4 +27,4 @@ jobs:
       with:
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          command: deploy --name blog --assets ./public --compatibility-date 2026-06-08 --route ${{ vars.CF_PAGES_BASEURL }}
+          command: deploy --name blog --assets ./public --compatibility-date "$(date +%F)"
