@@ -12,7 +12,7 @@ comments: false
 + 构建工具: [Hugo](https://gohugo.io/)
 + 主题风格: [Stack](https://github.com/CaiJimmy/hugo-theme-stack) by [Jimmy](https://cai.im/)
 + 评论支持: [Discussions](https://github.com/mxtaooo/blog/discussions/categories/announcements) + [giscus](https://github.com/giscus/giscus)
-+ 网站托管: [VPS](https://blog.mxtao.top/) & [Github Pages](https://mxtaooo.github.io/blog/)
++ 网站托管: [Cloudfalre Pages](https://blog.mxtao.top/) & [Github Pages](https://mxtaooo.github.io/blog/)
 
 ## the author
 
