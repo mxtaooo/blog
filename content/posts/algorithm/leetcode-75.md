@@ -4,8 +4,8 @@ description: Ace Coding Interview with 75 Qs
 author: mxtao
 categories: ["algorithm"]
 tags: ["algorithm", "leetcode"]
-date: 2025-08-24
-modified: 2025-08-24 15:40:00
+date: 2026-08-24
+modified: 2026-08-24 15:40:00
 draft: false
 comments: true
 ---
