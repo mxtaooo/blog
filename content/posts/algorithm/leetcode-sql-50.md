@@ -5,7 +5,7 @@ author: mxtao
 categories: ["algorithm"]
 tags: ["algorithm", "leetcode", "SQL"]
 date: 2026-08-28
-modified: 2026-08-28 17:20:00
+modified: 2026-08-29 12:00:00
 draft: false
 comments: true
 ---
@@ -14,6 +14,10 @@ comments: true
 主要目标是快速回顾数据库查询相关基础知识。
 
 系列共计50道题目，难度包含简易、中级和困难，考察面覆盖查询、关联、聚合、排序、分组、子查询。现将题目情况做简要记录。
+
+整体上讲，系列题目还是很简单的，考察的都是基本的知识，不存在超出能力范围的内容，主要时间用于阅读题目和查阅文档。
+但以PostgreSQL解答问题时，也暴露部分短板，例如对于某些语句的陌生(`SELECT DISTINCT ON (a) a FROM x ORDER BY a`)，窗口查询的覆盖尚不够全面，部分数据库语法、函数仍需查阅文档等。
+此外，尝试Pandas解答问题也许是有必要的。
 
 ## 基本查询(5E)
 
