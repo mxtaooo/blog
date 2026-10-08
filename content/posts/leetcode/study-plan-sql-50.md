@@ -2,8 +2,8 @@
 title: LeetCode - Study Play - SQL 50
 description: Crack SQL Interview in 50 Qs
 author: mxtao
-categories: ["algorithm"]
-tags: ["algorithm", "leetcode", "SQL"]
+categories: ["LeetCode"]
+tags: ["LeetCode", "algorithm", "SQL"]
 date: 2026-08-28
 modified: 2026-08-29 12:00:00
 draft: false

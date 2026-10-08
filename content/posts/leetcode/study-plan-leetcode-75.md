@@ -2,8 +2,8 @@
 title: LeetCode - Study Play - LeetCode 75
 description: Ace Coding Interview with 75 Qs
 author: mxtao
-categories: ["algorithm"]
-tags: ["algorithm", "leetcode"]
+categories: ["LeetCode"]
+tags: ["LeetCode", "algorithm"]
 date: 2026-08-24
 modified: 2026-08-29 12:00:00
 draft: false
